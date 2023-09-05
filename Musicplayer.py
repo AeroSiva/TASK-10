@@ -22,47 +22,55 @@ class Music_player:
         self.playlist = {"Melody": ["ms1","ms2","ms3"],
                         "Motivation": ["Mos1","Mos2","Mos3"],
                         "Folk":["Fs1","Fs2","Fs3"],
-                        "Lastest":["l1","l2","l3"],
+                        "Lastest":["ls1","ls2","ls3"],
                         }
         self.personalised_playlist = {}
         self.ratings = 0
         self.ratings_lst = []
 
-    def create_audio_url (self,genre):
- 
-        if genre not in self.personalised_playlist:
-            self.personalised_playlist[genre] = []
-        url = input("Enter the song url: ")
-        if url not in self.personalised_playlist[genre]:
-            self.personalised_playlist[genre].append(url)
-     
-            return "The audio song", self.personalised_playlist[genre]," added to the URL playlist"
-        else:
-            return "The audio song",url," already in URl Playlist"
+# To create personalised playlist- can choose sings from either inbuilt playlist or from url
         
     def create_playlist (self):
-        genre = input("Enter the genre to create your playlist or select one from the options: Melody Motivation Folk Lastest URL or enter new genre :")
+        genre = input('''Enter the genre to create your playlist or 
+        select one from the options: Melody Motivation Folk Lastest URL or enter new genre : ''')
         if genre in self.playlist.keys():
             self.personalised_playlist[genre] = []
             self.select_songs(genre)
         else:
             self.personalised_playlist[genre] = []
             self.create_audio_url(genre)
+        print("Songs are added to the ",genre)
         
-    
+# To select songs inbuilt playlist or enter song url from internet  
     def select_songs(self,genre):
         print (f"Select songs from the list {self.playlist[genre]}")
         songs = input("Enter name of songs (seperated by comma): ")
         songs = [song.strip() for song in songs.split(',')]
-        self.add_song_to_genre(songs,genre)
-
-    def add_song_to_genre (self,songs,genre):
         for song in songs:
-                self.personalised_playlist[genre].append(song)
+            self.add_song_to_genre(song,genre)
+        self.create_audio_url(genre)
 
-    def per_plst (self):
+# To add songs from inbuilt playlist/ url to personalised playlist 
+    def add_song_to_genre (self,song,genre):
+        if song not in self.personalised_playlist[genre]:
+            self.personalised_playlist[genre].append(song)
+            return "The audio song", self.personalised_playlist[genre]," added to the",genre," playlist"
+        else:
+            return "The audio song",song," already in the",genre," Playlist"
+    
+# To provide options to add song url  
+    def create_audio_url (self,genre):
+        url = input("Enter the song url: ")
+        if url:
+            song = url
+            self.add_song_to_genre (song,genre)
+     
+# To show playlist and personalised playlist
+    def print_plst (self):
+        print(self.playlist)
         print(self.personalised_playlist)
 
+# To search songs or genres from inbulit playlist and personalised playlist
     def search_songs (self,search_item):
         if search_item in self.playlist:
             print (self.playlist[search_item])
@@ -77,7 +85,7 @@ class Music_player:
         else:
             print( search_item ,"is not found in the music player")
     
-    
+# To get ratings from 3 users   
     def rating(self): # default value is 3
         for user in range (3):
             while True:
@@ -90,7 +98,7 @@ class Music_player:
         self.ratings = sum(self.ratings_lst) / len(self.ratings_lst)
         return ("Ovrall rating is: ",self.ratings)
         
-        
+# To generate random ratings for 3 users     
     def random_ratings(self,user_count=3):
         import random
         for user in range (user_count):
@@ -103,15 +111,12 @@ class Music_player:
 
 
 mp = Music_player()
-print("Users add sond URL")
-re = mp.create_audio_url("new_genre")  # Add songs URl
-print(re)
 # Creating playlist
 print("Creating playlist by selecting songs already in playlist")
 re = mp.create_playlist()   # Select Melody / motivation. if playlist already presents it shows the songs from it
-print("Creating playlist by creating Hit list (Arjunaru villu)")
+print("Creating playlist by creating Hit list ( song url = Arjunaru villu)")
 re = mp.create_playlist()   # create playlist name hit_songs  and add "Arjunaru villu" as url
-re = mp.per_plst()
+re = mp.print_plst()
 print("searching for melody songs")
 re = mp.search_songs("Melody")
 print("Searching for ms1 song")
